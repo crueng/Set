@@ -1,0 +1,4 @@
+﻿  main.cpp
+  set.cpp
+  Generating Code...
+D:\GIT\set\set\main.cpp(9): error C4700: uninitialized local variable 's' used

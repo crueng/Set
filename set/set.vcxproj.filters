@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Set Class">
+      <UniqueIdentifier>{598e67da-eb1a-45c9-9a11-43d52f3f2aa9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="set.cpp">
+      <Filter>Set Class</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="set.h">
+      <Filter>Set Class</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
