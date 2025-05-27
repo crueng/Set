@@ -198,6 +198,7 @@ void set::printTree(setElement* root, std::queue<setElement*> queue = {})
 				continue;
 			}
 			std::cout << temp->m_data;
+			//deletes the element in the queue
 			queue.pop();
 			//Puts the children of the node in the queue
 			queue.emplace(temp->m_leftNode);
