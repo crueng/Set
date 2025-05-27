@@ -1,4 +1,5 @@
 #pragma once
+#include <queue>
 class setElement
 {
 public:
@@ -44,6 +45,9 @@ public:
 
 	//Clears the whole set
 	void clear();
+
+	//Prints the binary tree
+	void printTree(setElement* root, std::queue<setElement*> queue);
 private:
 
 	//The first value in the set

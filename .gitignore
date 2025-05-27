@@ -8,3 +8,5 @@
 *.ilk
 *.tlog
 *.log
+*.idb
+*.exe

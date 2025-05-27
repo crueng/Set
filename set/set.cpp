@@ -1,4 +1,5 @@
 #include "set.h"
+#include <deque>
 #include <iostream>
 
 setElement::setElement(int Value)
@@ -27,49 +28,50 @@ size_t set::size()
 
 void set::emplace(int value)
 {
+	//If there is no element in the set, place the value at the root
 	if (m_root == nullptr)
 	{
 		setElement* newElement = new setElement(value);
 		m_root = newElement;
+		m_size++;
 		return;
 	}
 	setElement* newElement = new setElement(value);
 	setElement* tempNext = m_root;
 	while (true)
 	{
-		if (tempNext == nullptr)
-		{
-			break;
-		}
+		//If the value already exists in the list, return
 		if (tempNext->m_data == value)
 		{
-			break;
+			return;
 		}
+		//If the value is greater than the current data, go right and continue
 		if (tempNext->m_data < value)
 		{
+			//If the right node is empty, place the value there
 			if (tempNext->m_rightNode == nullptr)
 			{
 				tempNext->m_rightNode = newElement;
+				m_size++;
 				return;
 			}
 			tempNext = tempNext->m_rightNode;
+			continue;
 		}
-		else
+		//If the left node is empty, place the value there, otherwise go left
+		if (tempNext->m_leftNode == nullptr)
 		{
-			if (tempNext->m_leftNode == nullptr)
-			{
-				tempNext->m_leftNode = newElement;
-				return;
-			}
-			tempNext = tempNext->m_leftNode;
+			tempNext->m_leftNode = newElement;
+			m_size++;
+			return;
 		}
+		tempNext = tempNext->m_leftNode;
 	}
-	tempNext = newElement;
-	m_size++;
 }
 
 void set::erase(int value)
 {
+	//Checks if the value exists
 	if (!find(value))
 	{
 		return;
@@ -78,30 +80,22 @@ void set::erase(int value)
 	setElement* temp = m_root;
 	while (true)
 	{
+		//Breaks if the value was found
 		if (temp->m_data == value)
 		{
 			break;
 		}
+
+		//If the value is greater than the current data, go right and continue
 		if (temp->m_data < value)
 		{
-			if (temp->m_rightNode == nullptr)
-			{
-				return;
-			}
 			tempParent = temp;
 			temp = temp->m_rightNode;
 			continue;
 		}
-		if (temp->m_data > value)
-		{
-			if (temp->m_leftNode == nullptr)
-			{
-				return;
-			}
-			tempParent = temp;
-			temp = temp->m_leftNode;
-			continue;
-		}
+		//If the value is not greater than the current data, go left
+		tempParent = temp;
+		temp = temp->m_leftNode;
 	}
 	setElement* elementToFind = nullptr;
 	if (temp->m_rightNode == nullptr)
@@ -180,5 +174,30 @@ void set::clear()
 			temp = temp->m_rightNode;
 		}
 		delete temp;
+	}
+}
+
+void set::printTree(setElement* root, std::queue<setElement*> queue = {})
+{
+	queue.emplace(root);
+	while (!queue.empty())
+	{
+		//Goes through the whole level and prints every value 
+		for (setElement* temp : queue)
+		{
+			//If it does not exist, print "/"
+			if (temp == nullptr)
+			{
+				std::cout << "/";
+				queue.pop();
+				continue;
+			}
+			std::cout << temp->m_data;
+			queue.pop();
+			//Puts the children of the node in the queue
+			queue.emplace(temp->m_leftNode);
+			queue.emplace(temp->m_leftNode);
+		}
+		std::cout << "\n";
 	}
 }
