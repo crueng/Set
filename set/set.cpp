@@ -43,6 +43,7 @@ void set::emplace(int value)
 		//If the value already exists in the list, return
 		if (tempNext->m_data == value)
 		{
+			printTree(m_root);
 			return;
 		}
 		//If the value is greater than the current data, go right and continue
@@ -53,6 +54,7 @@ void set::emplace(int value)
 			{
 				tempNext->m_rightNode = newElement;
 				m_size++;
+				printTree(m_root);
 				return;
 			}
 			tempNext = tempNext->m_rightNode;
@@ -63,6 +65,7 @@ void set::emplace(int value)
 		{
 			tempNext->m_leftNode = newElement;
 			m_size++;
+			printTree(m_root);
 			return;
 		}
 		tempNext = tempNext->m_leftNode;
@@ -182,9 +185,11 @@ void set::printTree(setElement* root, std::queue<setElement*> queue = {})
 	queue.emplace(root);
 	while (!queue.empty())
 	{
-		//Goes through the whole level and prints every value 
-		for (setElement* temp : queue)
+		//Goes through the whole level and prints every value
+		size_t it = queue.size();
+		for (int i = 0; i < it; i++)
 		{
+			setElement* temp = queue.front();
 			//If it does not exist, print "/"
 			if (temp == nullptr)
 			{
