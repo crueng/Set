@@ -1,6 +1,13 @@
 #include "set.h"
 #include <deque>
 #include <iostream>
+#define CLS_ON true
+
+#if CLS_ON
+#define CLS system("cls");
+#else
+#define CLS //system("cls");
+#endif
 
 setElement::setElement(int Value)
 {
@@ -34,6 +41,8 @@ void set::emplace(int value)
 		setElement* newElement = new setElement(value);
 		m_root = newElement;
 		m_size++;
+		CLS
+			printTree(m_root);
 		return;
 	}
 	setElement* newElement = new setElement(value);
@@ -43,7 +52,8 @@ void set::emplace(int value)
 		//If the value already exists in the list, return
 		if (tempNext->m_data == value)
 		{
-			printTree(m_root);
+			CLS
+				printTree(m_root);
 			return;
 		}
 		//If the value is greater than the current data, go right and continue
@@ -54,7 +64,8 @@ void set::emplace(int value)
 			{
 				tempNext->m_rightNode = newElement;
 				m_size++;
-				printTree(m_root);
+				CLS
+					printTree(m_root);
 				return;
 			}
 			tempNext = tempNext->m_rightNode;
@@ -65,7 +76,8 @@ void set::emplace(int value)
 		{
 			tempNext->m_leftNode = newElement;
 			m_size++;
-			printTree(m_root);
+			CLS
+				printTree(m_root);
 			return;
 		}
 		tempNext = tempNext->m_leftNode;
@@ -77,6 +89,91 @@ void set::erase(int value)
 	//Checks if the value exists
 	if (!find(value))
 	{
+		CLS
+			printTree(m_root);
+		return;
+	}
+	setElement* tempParent = nullptr;
+	setElement* temp = m_root;
+	while (true)
+	{
+		//Breaks if the value was found
+		if (temp->m_data == value)
+		{
+			break;
+		}
+
+		//If the value is greater than the current data, go right and continue
+		if (temp->m_data < value)
+		{
+			tempParent = temp;
+			temp = temp->m_rightNode;
+			continue;
+		}
+		//If the value is not greater than the current data, go left
+		tempParent = temp;
+		temp = temp->m_leftNode;
+	}
+
+	setElement* elementToFind = nullptr;
+	if (temp->m_data > tempParent->m_data)
+	{
+		if (temp->m_rightNode == nullptr)
+		{
+			tempParent->m_rightNode = temp->m_leftNode;
+			delete temp;
+			CLS
+			printTree(m_root);
+			return;
+		}
+		elementToFind = temp->m_rightNode;
+		while (true)
+		{
+			if (elementToFind->m_leftNode != nullptr)
+			{
+				elementToFind = elementToFind->m_leftNode;
+			}
+			break;
+		}
+		elementToFind->m_leftNode = temp->m_leftNode;
+		tempParent->m_rightNode = elementToFind;
+		delete temp;
+		CLS
+		printTree(m_root);
+		return;
+	}
+	if (temp->m_rightNode == nullptr)
+	{
+		tempParent->m_leftNode = temp->m_leftNode;
+		delete temp;
+		CLS
+		printTree(m_root);
+		return;
+	}
+	elementToFind = temp->m_rightNode;
+	while (true)
+	{
+		if (elementToFind->m_leftNode != nullptr)
+		{
+			elementToFind = elementToFind->m_leftNode;
+		}
+		break;
+	}
+	elementToFind->m_leftNode = temp->m_leftNode;
+	tempParent->m_leftNode = elementToFind;
+	delete temp;
+	CLS
+	printTree(m_root);
+	return;
+}
+
+/*void set::erase(int value)
+{
+	//Checks if the value exists
+	if (!find(value))
+	{
+		CLS
+			printTree(m_root);
 		return;
 	}
 	setElement* tempParent = nullptr;
@@ -103,7 +200,9 @@ void set::erase(int value)
 	setElement* elementToFind = nullptr;
 	if (temp->m_rightNode == nullptr)
 	{
-		tempParent->m_rightNode = elementToFind;
+		tempParent->m_leftNode = temp->m_leftNode;
+		CLS
+			printTree(m_root);
 		return;
 	}
 	elementToFind = temp->m_rightNode;
@@ -122,6 +221,8 @@ void set::erase(int value)
 		tempParent->m_leftNode = elementToFind;
 		delete temp;
 		m_size--;
+		CLS
+			printTree(m_root);
 		return;
 	}
 	elementToFind->m_leftNode = temp->m_leftNode;
@@ -129,7 +230,7 @@ void set::erase(int value)
 	delete temp;
 	m_size--;
 }
-
+*/
 bool set::find(int number)
 {
 	setElement* temp = m_root;
