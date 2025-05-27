@@ -180,7 +180,7 @@ void set::clear()
 	}
 }
 
-void set::printTree(setElement* root, std::queue<setElement*> queue = {})
+void set::printTree(setElement* root, std::queue<setElement*> queue)
 {
 	queue.emplace(root);
 	while (!queue.empty())
