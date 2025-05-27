@@ -1,8 +1,14 @@
 #include "set.h"
+#include <iostream>
 
 setElement::setElement(int Value)
 {
 	m_data = Value;
+}
+
+set::~set()
+{
+	//clear();
 }
 
 bool set::empty()
@@ -28,9 +34,8 @@ void set::emplace(int value)
 		return;
 	}
 	setElement* newElement = new setElement(value);
-	bool found = false;
 	setElement* tempNext = m_root;
-	while (!found)
+	while (true)
 	{
 		if (tempNext == nullptr)
 		{
@@ -42,30 +47,36 @@ void set::emplace(int value)
 		}
 		if (tempNext->m_data < value)
 		{
-			if (tempNext->m_leftNode == nullptr)
-			{
-				tempNext->m_leftNode = newElement;
-				found = true;
-			}
-		}
-		else
-		{
 			if (tempNext->m_rightNode == nullptr)
 			{
 				tempNext->m_rightNode = newElement;
-				found = true;
+				return;
 			}
+			tempNext = tempNext->m_rightNode;
+		}
+		else
+		{
+			if (tempNext->m_leftNode == nullptr)
+			{
+				tempNext->m_leftNode = newElement;
+				return;
+			}
+			tempNext = tempNext->m_leftNode;
 		}
 	}
+	tempNext = newElement;
 	m_size++;
 }
 
 void set::erase(int value)
 {
-	bool found = false;
+	if (!find(value))
+	{
+		return;
+	}
 	setElement* tempParent = nullptr;
 	setElement* temp = m_root;
-	while (!found)
+	while (true)
 	{
 		if (temp->m_data == value)
 		{
@@ -92,26 +103,40 @@ void set::erase(int value)
 			continue;
 		}
 	}
-	setElement* lastNode = temp;
-	while (lastNode->m_leftNode != nullptr)
+	setElement* elementToFind = nullptr;
+	if (temp->m_rightNode == nullptr)
 	{
-		lastNode = lastNode->m_leftNode;
-	}
-	if (tempParent->m_rightNode == temp)
-	{
-		tempParent->m_rightNode = lastNode;
-		delete temp;
+		tempParent->m_rightNode = elementToFind;
 		return;
 	}
-	tempParent->m_leftNode = lastNode;
+	elementToFind = temp->m_rightNode;
+	while (true)
+	{
+		if (elementToFind->m_leftNode != nullptr)
+		{
+			elementToFind = elementToFind->m_leftNode;
+			continue;
+		}
+		break;
+	}
+	if (tempParent->m_leftNode == temp)
+	{
+		elementToFind->m_leftNode = temp->m_leftNode;
+		tempParent->m_leftNode = elementToFind;
+		delete temp;
+		m_size--;
+		return;
+	}
+	elementToFind->m_leftNode = temp->m_leftNode;
+	tempParent->m_leftNode = elementToFind;
 	delete temp;
+	m_size--;
 }
 
 bool set::find(int number)
 {
 	setElement* temp = m_root;
-	bool found = false;
-	while (!found)
+	while (true)
 	{
 		if (temp->m_data == number)
 		{
@@ -134,4 +159,26 @@ bool set::find(int number)
 		break;
 	}
 	return false;
+}
+
+void set::clear()
+{
+	setElement* temp = m_root;
+	while (m_size != 0)
+	{
+		if (temp == nullptr)
+		{
+			temp = m_root;
+		}
+		if (temp->m_leftNode != nullptr)
+		{
+			temp = temp->m_leftNode;
+			continue;
+		}
+		if (temp->m_rightNode != nullptr)
+		{
+			temp = temp->m_rightNode;
+		}
+		delete temp;
+	}
 }
