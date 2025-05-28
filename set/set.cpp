@@ -1,6 +1,7 @@
 #include "set.h"
 #include <deque>
 #include <iostream>
+#include <vector>
 #define CLS_ON true
 
 #if CLS_ON
@@ -231,7 +232,7 @@ void set::erase(int value)
 	m_size--;
 }
 */
-bool set::find(int number)
+bool set::find(int number) const
 {
 	setElement* temp = m_root;
 	while (true)
@@ -296,7 +297,7 @@ void set::printTree()
 	printTree(m_root);
 }
 
-void set::printTree(setElement* root, std::queue<setElement*> queue)
+void set::printTree(setElement* root, std::queue<setElement*> queue) const
 {
 	queue.emplace(root);
 	while (!queue.empty())
@@ -322,4 +323,58 @@ void set::printTree(setElement* root, std::queue<setElement*> queue)
 		}
 		std::cout << "\n";
 	}
+}
+
+void set::balanceTree()
+{
+	if (m_root == nullptr)
+	{
+		return;
+	}
+	std::vector<int> vec;
+	setElement* currentElement = m_root;
+	while (true)
+	{
+		if (currentElement->m_leftNode != nullptr)
+		{
+			vec.push_back(currentElement->m_leftNode->m_data);
+			currentElement = currentElement->m_leftNode;
+		}
+	}
+}
+
+setElement* set::getSmallestElement() const
+{
+	if (m_root == nullptr)
+	{
+		return nullptr;
+	}
+	setElement* currentElement = m_root;
+	while (true)
+	{
+		if (currentElement->m_leftNode != nullptr)
+		{
+			currentElement = currentElement->m_leftNode;
+		}
+		break;
+	}
+	return currentElement;
+}
+
+setElement* set::getGreatestElement() const
+{
+	if (m_root == nullptr)
+	{
+		return nullptr;
+	}
+	setElement* currentElement = m_root;
+	while (true)
+	{
+		if (currentElement->m_rightNode != nullptr)
+		{
+			currentElement = currentElement->m_rightNode;
+		}
+		break;
+	}
+	return currentElement;
 }

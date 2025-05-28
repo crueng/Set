@@ -41,17 +41,27 @@ public:
 	void erase(int value);
 
 	//Finds a value in the set
-	bool find(int number);
+	bool find(int number) const;
 
 	//Clears the whole set
 	void clear();
 
 	//Prints the binary tree
 	void printTree();
-private:
-	
-	void printTree(setElement* root, std::queue<setElement*> queue = {});
 
+	//Returns the smallest Element of the set
+	setElement* getSmallestElement() const;
+
+	//Returns the greatest Element of the set
+	setElement* getGreatestElement() const;
+private:
+
+	//Prints the binary tree
+	void printTree(setElement* root, std::queue<setElement*> queue = {}) const;
+
+	//Balances the binary tree
+	void balanceTree();
+	
 	//The first value in the set
 	setElement* m_root = nullptr;
 
