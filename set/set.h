@@ -47,8 +47,10 @@ public:
 	void clear();
 
 	//Prints the binary tree
-	void printTree(setElement* root, std::queue<setElement*> queue = {});
+	void printTree();
 private:
+	
+	void printTree(setElement* root, std::queue<setElement*> queue = {});
 
 	//The first value in the set
 	setElement* m_root = nullptr;

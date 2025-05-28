@@ -4,10 +4,12 @@
 #define CLS_ON true
 
 #if CLS_ON
-#define CLS system("cls");
+#define CLS system("cls")
 #else
-#define CLS //system("cls");
+#define CLS //system("cls")
 #endif
+
+#define COMPILE_DATETIME __TIME__
 
 setElement::setElement(int Value)
 {
@@ -41,8 +43,6 @@ void set::emplace(int value)
 		setElement* newElement = new setElement(value);
 		m_root = newElement;
 		m_size++;
-		CLS
-			printTree(m_root);
 		return;
 	}
 	setElement* newElement = new setElement(value);
@@ -52,8 +52,8 @@ void set::emplace(int value)
 		//If the value already exists in the list, return
 		if (tempNext->m_data == value)
 		{
-			CLS
-				printTree(m_root);
+			/*CLS();
+			printTree(m_root);*/
 			return;
 		}
 		//If the value is greater than the current data, go right and continue
@@ -64,8 +64,8 @@ void set::emplace(int value)
 			{
 				tempNext->m_rightNode = newElement;
 				m_size++;
-				CLS
-					printTree(m_root);
+				/*CLS;
+				printTree(m_root);*/
 				return;
 			}
 			tempNext = tempNext->m_rightNode;
@@ -76,8 +76,8 @@ void set::emplace(int value)
 		{
 			tempNext->m_leftNode = newElement;
 			m_size++;
-			CLS
-				printTree(m_root);
+			/*CLS;
+			printTree(m_root);*/
 			return;
 		}
 		tempNext = tempNext->m_leftNode;
@@ -89,8 +89,8 @@ void set::erase(int value)
 	//Checks if the value exists
 	if (!find(value))
 	{
-		CLS
-			printTree(m_root);
+		/*CLS;
+		printTree(m_root);*/
 		return;
 	}
 	setElement* tempParent = nullptr;
@@ -122,8 +122,8 @@ void set::erase(int value)
 		{
 			tempParent->m_rightNode = temp->m_leftNode;
 			delete temp;
-			CLS
-			printTree(m_root);
+			/*CLS;
+			printTree(m_root);*/
 			return;
 		}
 		elementToFind = temp->m_rightNode;
@@ -138,16 +138,16 @@ void set::erase(int value)
 		elementToFind->m_leftNode = temp->m_leftNode;
 		tempParent->m_rightNode = elementToFind;
 		delete temp;
-		CLS
-		printTree(m_root);
+		/*CLS;
+		printTree(m_root);*/
 		return;
 	}
 	if (temp->m_rightNode == nullptr)
 	{
 		tempParent->m_leftNode = temp->m_leftNode;
 		delete temp;
-		CLS
-		printTree(m_root);
+		/*CLS;
+		printTree(m_root);*/
 		return;
 	}
 	elementToFind = temp->m_rightNode;
@@ -162,8 +162,8 @@ void set::erase(int value)
 	elementToFind->m_leftNode = temp->m_leftNode;
 	tempParent->m_leftNode = elementToFind;
 	delete temp;
-	CLS
-	printTree(m_root);
+	/*CLS;
+	printTree(m_root);*/
 	return;
 }
 
@@ -261,24 +261,39 @@ bool set::find(int number)
 
 void set::clear()
 {
-	setElement* temp = m_root;
-	while (m_size != 0)
+	if (m_root == nullptr)
 	{
-		if (temp == nullptr)
-		{
-			temp = m_root;
-		}
-		if (temp->m_leftNode != nullptr)
-		{
-			temp = temp->m_leftNode;
-			continue;
-		}
-		if (temp->m_rightNode != nullptr)
-		{
-			temp = temp->m_rightNode;
-		}
-		delete temp;
+		return;
 	}
+	std::deque<setElement*> toDelete;
+	std::queue<setElement*> it;
+	it.emplace(m_root);
+	while (!it.empty())
+	{
+		if (it.front()->m_leftNode != nullptr)
+		{
+			it.emplace(it.front()->m_leftNode);
+			toDelete.emplace_front(it.front()->m_leftNode);
+		}
+		if (it.front()->m_rightNode != nullptr)
+		{
+			it.emplace(it.front()->m_rightNode);
+			toDelete.emplace_front(it.front()->m_rightNode);
+		}
+		it.pop();
+	}
+	while (!toDelete.empty())
+	{
+		delete toDelete.front();
+		toDelete.pop_front();
+	}
+	delete m_root;
+	m_root = nullptr;
+}
+
+void set::printTree()
+{
+	printTree(m_root);
 }
 
 void set::printTree(setElement* root, std::queue<setElement*> queue)
